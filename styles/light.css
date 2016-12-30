@@ -1,0 +1,12 @@
+.navbar {
+  background-color: #fff;
+  border-radius: 0px;
+}
+
+.navbar-default: {
+  border-bottom-color: #00B16A;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #00B16A;
+}

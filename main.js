@@ -1,9 +1,12 @@
 const {
   app,
   BrowserWindow
-} = require('electron')
-const path = require('path')
-const url = require('url')
+} = require('electron');
+const path = require('path');
+const url = require('url');
+const ipc = require('electron').ipcMain;
+const fs = require('fs');
+const ejs = require('ejs');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -13,8 +16,9 @@ function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     width: 800,
-    height: 600
-  })
+    height: 600,
+    titleBarStyle: 'hidden'
+  });
 
   // and load the index.html of the app.
   win.loadURL(url.format({
@@ -24,7 +28,9 @@ function createWindow() {
   }))
 
   // Open the DevTools.
-  // win.webContents.openDevTools()
+  win.webContents.openDevTools();
+
+  updateImageGrid();
 
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -33,6 +39,28 @@ function createWindow() {
     // when you should delete the corresponding element.
     win = null
   })
+}
+
+var images = [];
+
+ipc.on('dragDropFile', function(event, data) {
+  console.log("NEW IMAGE");
+  images = images.concat(data);
+  // Update the page
+  updateImageGrid();
+});
+
+function updateImageGrid() {
+  var data = ejs.renderFile('components/imageGrid.ejs', images, {}, function(err, str) {
+    if (err || str == undefined) {
+      console.log("There was an error rendering the EJS file.");
+      console.log("Error = " + err);
+      // TODO :: Eventually do something
+    } else {
+      console.log(str);
+      win.webContents.send('imageData', str);
+    }
+  });
 }
 
 // This method will be called when Electron has finished

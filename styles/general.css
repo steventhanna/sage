@@ -1,0 +1,33 @@
+.navbar-center {
+  text-align: center;
+}
+
+.navbar {
+  border-radius: 0px;
+}
+
+.accent {
+  color: #00B16A;
+}
+
+.form-control {
+  border-radius: 20px;
+}
+
+.form-control:focus {
+  border-color: #00B16A;
+}
+
+.error-main {
+  margin-top: 40%;
+  width: 100%;
+  text-align: center;
+}
+
+.error-main h1 {
+  color: #00B16A;
+}
+
+.error-main p {
+  font-size: 18px;
+}

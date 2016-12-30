@@ -11,14 +11,20 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="styles/bootstrap.min.js"></script>
+    <script src="js/freewall.js"></script>
+    <script src="js/transition.js"></script>
+    <script src="js/zoom.min.js"></script>
     <link rel="stylesheet" href="styles/font-awesome.css">
     <link rel="stylesheet" href="styles/flexboxgrid.min.css">
+    <link rel="stylesheet" href="styles/zoom.css">
     <link rel="stylesheet" href="styles/general.css">
     <link rel="stylesheet" href="styles/light.css">
     <script src="index.js"></script>
   </head>
 
   <body>
+    <div class="error">
+    </div>
     <nav id="navbar" class="navbar navbar-default">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -33,6 +39,11 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a id="clearSearch" href="#"><i class="fa fa-undo fa-lg"></i></a>
+            </li>
+          </ul>
           <form class="navbar-form navbar-right">
             <div class="form-group">
               <input type="text" class="form-control" placeholder="Search">
@@ -43,8 +54,20 @@
       </div>
       <!-- /.container-fluid -->
     </nav>
-    <div class="container">
-      <div class="row" id="imageGrid">
+    <div id="imageGrid">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <center>
+              <div class="error-main">
+                <h1>Drag Files Here</h1>
+                <p>
+                  To start a search, drag and drop image files here.
+                </p>
+              </div>
+            </center>
+          </div>
+        </div>
       </div>
     </div>
   </body>

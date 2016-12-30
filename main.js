@@ -7,6 +7,7 @@ const url = require('url');
 const ipc = require('electron').ipcMain;
 const fs = require('fs');
 const ejs = require('ejs');
+const storage = require('electron-json-storage');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -26,11 +27,14 @@ function createWindow() {
     protocol: 'file:',
     slashes: true
   }))
-
+  updateImageGrid();
   // Open the DevTools.
   win.webContents.openDevTools();
 
-  updateImageGrid();
+  win.once('ready-to-show', () => {
+    updateImageGrid();
+    win.show();
+  });
 
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -41,23 +45,85 @@ function createWindow() {
   })
 }
 
+/**
+ * error function.  Sends an error message to the renderer process
+ * @param type :: common bootstrap error types.  'succcess', 'danger', 'warning'
+ * @param message :: the message of the error
+ */
+function error(type, message) {
+  var data = {
+    type: type,
+    message: message
+  };
+  win.webContents.send('error', data);
+}
+
+function getSetting(key, callback) {
+  storage.get(key, function(err, data) {
+    if (err || data == undefined) {
+      console.log("There was an error getting the setting.");
+      console.log("Error = " + err);
+      error('danger', "<strong>Uh-Oh!</strong> There was an error getting the setting: " + key + ".");
+    } else {
+      callback(data);
+    }
+  });
+}
+
+function getAllSettings(callback) {
+  storage.getAll(function(err, data) {
+    if (err || data == undefined) {
+      console.log("There was an error getting all of the settings.");
+      console.log("Error = " + err);
+      error('danger', "<strong>Uh-Oh!</strong> There was an error getting all of the settings.");
+    } else {
+      callback(data);
+    }
+  });
+}
+
+function setSetting(name, key, value, callback) {
+  getSetting('settings', function(temp) {
+    temp[key] = value;
+    storage.set(name, temp, function(err) {
+      if (err) {
+        console.log("There was an error saving the setting.");
+        console.log("Error = " + err);
+        error('danger', "<strong>Uh-Oh!</strong> There was an error saving the setting: " + name + ", " + key + ", " + value + ".");
+      } else {
+        callback();
+      }
+    });
+  });
+}
+
+
 var images = [];
 
 ipc.on('dragDropFile', function(event, data) {
   console.log("NEW IMAGE");
+  console.log(JSON.stringify(data[0]));
   images = images.concat(data);
   // Update the page
   updateImageGrid();
 });
 
+ipc.on('clearSearch', function(event, data) {
+  images = [];
+  updateImageGrid();
+});
+
 function updateImageGrid() {
-  var data = ejs.renderFile('components/imageGrid.ejs', images, {}, function(err, str) {
+  var values = {
+    images: images
+  };
+  console.log(JSON.stringify(values));
+  var data = ejs.renderFile('components/imageGrid.ejs', values, function(err, str) {
     if (err || str == undefined) {
       console.log("There was an error rendering the EJS file.");
       console.log("Error = " + err);
       // TODO :: Eventually do something
     } else {
-      console.log(str);
       win.webContents.send('imageData', str);
     }
   });

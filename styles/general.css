@@ -31,3 +31,16 @@
 .error-main p {
   font-size: 18px;
 }
+
+.margin-around {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.margin-around img {
+  border-radius: 5px;
+  margin-right: 5px;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

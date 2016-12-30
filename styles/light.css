@@ -10,3 +10,15 @@
 .navbar-default .navbar-nav > li > a {
   color: #00B16A;
 }
+
+.btn-green-outline {
+  color: #00B16A;
+  background-color: transparent !important;
+  border-color: #00B16A;
+}
+
+.btn-green-outline:hover {
+  color: #fff;
+  background-color: #00B16A !important;
+  border-color: #00B16A;
+}

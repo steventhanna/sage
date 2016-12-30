@@ -34,6 +34,7 @@ function createWindow() {
   win.once('ready-to-show', () => {
     updateImageGrid();
     win.show();
+    console.log("DONE");
   });
 
   // Emitted when the window is closed.
@@ -97,6 +98,13 @@ function setSetting(name, key, value, callback) {
   });
 }
 
+// Attempt to get the setting on start
+getSetting('settings', function(settings) {
+  if (settings.lastImageSet != undefined) {
+    images = settings.lastImageSet;
+  }
+  updateImageGrid();
+});
 
 var images = [];
 
@@ -110,6 +118,13 @@ ipc.on('dragDropFile', function(event, data) {
 
 ipc.on('clearSearch', function(event, data) {
   images = [];
+  // Manually update the setting
+  setSetting('settings', 'lastImageSet', undefined, function() {
+    updateImageGrid();
+  });
+});
+
+ipc.on('renderImage', function() {
   updateImageGrid();
 });
 
@@ -117,13 +132,22 @@ function updateImageGrid() {
   var values = {
     images: images
   };
-  console.log(JSON.stringify(values));
   var data = ejs.renderFile('components/imageGrid.ejs', values, function(err, str) {
     if (err || str == undefined) {
       console.log("There was an error rendering the EJS file.");
       console.log("Error = " + err);
-      // TODO :: Eventually do something
+      error('danger', "<strong>Uh-Oh!</strong> There was an error rendering the component.");
     } else {
+      // Update the settings
+      if (images != undefined && images.length > 0) {
+        setSetting('settings', 'lastImageSet', images, function() {
+          console.log("Setting should be set. Lets check");
+          getSetting('settings', function(data) {
+            console.log(JSON.stringify(data));
+          });
+        });
+      }
+      console.log(str);
       win.webContents.send('imageData', str);
     }
   });

@@ -19,10 +19,16 @@ ipc.on('error', (event, errorMessage) => {
 });
 
 $(document).ready(function() {
+  console.log("READY");
+
   ipc.on('imageData', function(event, data) {
-    console.log("INSIDE");
+    console.log("IMAGE RUN");
     console.log(data);
     document.getElementById('imageGrid').innerHTML = data;
+  });
+
+  $("#restoreImageGroupButton").click(function() {
+    ipc.send('renderImage');
   });
 
   document.ondragover = document.ondrop = (ev) => {
@@ -47,7 +53,6 @@ $(document).ready(function() {
 
   document.body.ondrop = (ev) => {
     // Send the content to the main
-    console.log(ev.dataTransfer.files);
     var images = [];
     for (var i = 0; i < ev.dataTransfer.files.length; i++) {
       var temp = {
@@ -57,7 +62,6 @@ $(document).ready(function() {
       };
       images.push(temp);
     }
-    console.log(images);
     ipc.send('dragDropFile', images);
     ev.preventDefault()
   }

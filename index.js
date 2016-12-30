@@ -9,13 +9,15 @@ ipc.on('error', (event, errorMessage) => {
   var type = errorMessage.type;
   var message = errorMessage.message;
   document.getElementById('error').innerHTML = '<div style="margin-right: 10px; position: relative;" class="alert alert-' + type + ' alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + message + '</div>';
+  $("#errorBar").fadeIn();
   $("#error").fadeIn();
   window.setTimeout(function() {
     var alertT = '.alert-' + type;
     // TODO :: Implement JQuery fade out of alert.
     $("#error").fadeOut();
+    $("#errorBar").fadeOut();
     // $(alertT).alert('close');
-  }, 3000);
+  }, 10000);
 });
 
 $(document).ready(function() {
@@ -45,7 +47,6 @@ $(document).ready(function() {
 
   $("#openImageButton").click(function() {
     // Get the value
-    console.log("CLICK");
     var val = $("#openImageButton").val();
     console.log(val);
     shell.openItem(val);

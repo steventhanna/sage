@@ -111,17 +111,27 @@ var images = [];
 
 ipc.on('dragDropFile', function(event, data) {
   // Analyze the images, then concat the data
+  error('success', "<strong>Analyzing...</strong> This might take some time, the page will update when ready.");
+  console.log("DRAG");
+  var counter = 0;
   async.map(data, function(image) {
-    Tesseract.recognize(image.path).then(function(result) {
+    Tesseract.recognize(image.path).progress(message => console.log(message)).then(function(result) {
       console.log(result.text);
       // Build the string from the array
       image.content = result.text;
       console.log(JSON.stringify(data));
+      counter++;
+      if (counter == data.length) {
+        images = images.concat(data);
+        updateImageGrid();
+        return;
+      }
       return image;
     });
-  }, function() {
+  }, function(err, result) {
     console.log("DONE");
-    images = images.concat(data);
+    console.log(JSON.stringify(result));
+    images = images.concat(result);
     upadateImageGrid();
   });
 });

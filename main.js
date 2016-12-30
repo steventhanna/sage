@@ -13,7 +13,9 @@ var Tesseract = require('tesseract.js');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
+let win;
+
+let loadingModal;
 
 function createWindow() {
   // Create the browser window.
@@ -44,6 +46,29 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     win = null
+  });
+}
+
+function createLoadingModal() {
+  loadingModal = new BrowserWindow({
+    parent: win,
+    modal: true,
+    width: 600,
+    height: 300
+  });
+
+  loadingModal.loadURL(url.format({
+    pathname: path.join(__dirname, 'loadingModal.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
+
+  loadingModal.once('ready-to-show', () => {
+    loadingModal.show();
+  });
+
+  loadingModal.on('closed', () => {
+    loadingModal = null;
   });
 }
 
@@ -114,12 +139,12 @@ ipc.on('dragDropFile', function(event, data) {
   error('success', "<strong>Analyzing...</strong> This might take some time, the page will update when ready.");
   console.log("DRAG");
   var counter = 0;
+  createLoadingModal();
   async.map(data, function(image) {
-    Tesseract.recognize(image.path).progress(message => console.log(message)).then(function(result) {
+    Tesseract.recognize(image.path).progress(message => loadingModal.webContents.send('loadingUpdate', [message, counter + 1])).then(function(result) {
       console.log(result.text);
       // Build the string from the array
       image.content = result.text;
-      console.log(JSON.stringify(data));
       counter++;
       if (counter == data.length) {
         images = images.concat(data);
@@ -129,7 +154,6 @@ ipc.on('dragDropFile', function(event, data) {
       return image;
     });
   }, function(err, result) {
-    console.log("DONE");
     console.log(JSON.stringify(result));
     images = images.concat(result);
     upadateImageGrid();
@@ -167,9 +191,21 @@ function updateImageGrid() {
           });
         });
       }
+      if (loadingModal != undefined) {
+        sendNotification("Sage", "Image Analysis Complete");
+        loadingModal.close();
+      }
       win.webContents.send('imageData', str);
     }
   });
+}
+
+function sendNotification(title, content) {
+  var option = {
+    title: title,
+    body: content
+  };
+  win.webContents.send('notification', option);
 }
 
 // This method will be called when Electron has finished

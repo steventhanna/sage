@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Sage</title>
+    <script src="styles/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/bootstrap.min.js">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="styles/bootstrap.min.js"></script>
+    <script src="js/freewall.js"></script>
+    <script src="js/transition.js"></script>
+    <script src="js/zoom.min.js"></script>
+    <link rel="stylesheet" href="styles/font-awesome.css">
+    <link rel="stylesheet" href="styles/flexboxgrid.min.css">
+    <link rel="stylesheet" href="styles/zoom.css">
+    <link rel="stylesheet" href="styles/general.css">
+    <link rel="stylesheet" href="styles/light.css">
+    <script src="loadingModal.js"></script>
+  </head>
+
+  <body>
+    <div id="loadingSection">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <center>
+              <div class="error-main go-left">
+                <h1>Analyzing Images</h1>
+                <p id="currentAnalysis">Preparing for Analysis</p>
+                <div class="progress">
+                  <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                    <span class="sr-only">0% Complete</span>
+                  </div>
+                </div>
+              </div>
+            </center>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>

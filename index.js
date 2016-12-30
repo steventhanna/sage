@@ -20,6 +20,10 @@ ipc.on('error', (event, errorMessage) => {
   }, 10000);
 });
 
+ipc.on('notification', function(err, data) {
+  new Notification(data.title, data);
+});
+
 $(document).ready(function() {
   console.log("READY");
 

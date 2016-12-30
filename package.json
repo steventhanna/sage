@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "main": "main.js",
   "dependencies": {
+    "async": "^2.1.4",
     "ejs": "^2.5.5",
     "electron-json-storage": "^2.1.0",
     "electron-prebuilt": "^0.36.0",
-    "electron-reload": "^0.2.0"
+    "electron-reload": "^0.2.0",
+    "tesseract.js": "^1.0.10"
   }
 }

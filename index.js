@@ -58,7 +58,8 @@ $(document).ready(function() {
       var temp = {
         name: ev.dataTransfer.files[i].name,
         path: ev.dataTransfer.files[i].path,
-        type: ev.dataTransfer.files[i].type
+        type: ev.dataTransfer.files[i].type,
+        content: ""
       };
       images.push(temp);
     }

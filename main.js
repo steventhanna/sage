@@ -8,6 +8,8 @@ const ipc = require('electron').ipcMain;
 const fs = require('fs');
 const ejs = require('ejs');
 const storage = require('electron-json-storage');
+const async = require('async');
+var Tesseract = require('tesseract.js');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -34,7 +36,6 @@ function createWindow() {
   win.once('ready-to-show', () => {
     updateImageGrid();
     win.show();
-    console.log("DONE");
   });
 
   // Emitted when the window is closed.
@@ -43,7 +44,7 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     win = null
-  })
+  });
 }
 
 /**
@@ -109,11 +110,20 @@ getSetting('settings', function(settings) {
 var images = [];
 
 ipc.on('dragDropFile', function(event, data) {
-  console.log("NEW IMAGE");
-  console.log(JSON.stringify(data[0]));
-  images = images.concat(data);
-  // Update the page
-  updateImageGrid();
+  // Analyze the images, then concat the data
+  async.map(data, function(image) {
+    Tesseract.recognize(image.path).then(function(result) {
+      console.log(result.text);
+      // Build the string from the array
+      image.content = result.text;
+      console.log(JSON.stringify(data));
+      return image;
+    });
+  }, function() {
+    console.log("DONE");
+    images = images.concat(data);
+    upadateImageGrid();
+  });
 });
 
 ipc.on('clearSearch', function(event, data) {
@@ -147,7 +157,6 @@ function updateImageGrid() {
           });
         });
       }
-      console.log(str);
       win.webContents.send('imageData', str);
     }
   });
@@ -165,7 +174,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-})
+});
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
@@ -173,7 +182,7 @@ app.on('activate', () => {
   if (win === null) {
     createWindow()
   }
-})
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

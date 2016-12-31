@@ -174,7 +174,6 @@ ipc.on('dragDropFile', function(event, data) {
       return image;
     });
   }, function(err, result) {
-    console.log(JSON.stringify(result));
     images = images.concat(result);
     upadateImageGrid();
   });
@@ -228,7 +227,7 @@ function updateImageGrid() {
         setSetting('settings', 'lastImageSet', images, function() {
           console.log("Setting should be set. Lets check");
           getSetting('settings', function(data) {
-            console.log(JSON.stringify(data));
+            // console.log(JSON.stringify(data));
           });
         });
       }

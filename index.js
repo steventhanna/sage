@@ -25,7 +25,10 @@ ipc.on('notification', function(err, data) {
 });
 
 $(document).ready(function() {
-  console.log("READY");
+
+  $("#searchBox").on('input', function() {
+    ipc.send('searchChange', $(this).val());
+  });
 
   ipc.on('imageData', function(event, data) {
     console.log("IMAGE RUN");

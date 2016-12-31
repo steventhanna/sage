@@ -1,4 +1,4 @@
-<% if (typeof images == "undefined" || images.length == 0) { %>
+<% if ((typeof images == "undefined" || images.length == 0) && search == false) { %>
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
@@ -13,6 +13,21 @@
       </div>
     </div>
   </div>
+  <% } else if ((typeof images == "undefined" || images.length == 0) && search == true) { %>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <center>
+            <div class="error-main">
+              <h1>No Search Results</h1>
+              <p>
+                Character Recognition does not work perfectly. Try a different search query or add more images.
+              </p>
+            </div>
+          </center>
+        </div>
+      </div>
+    </div>
 <% } else { %>
   <div id="images" class="margin-around">
   <% for (var i = 0; i < images.length; i++) { %>

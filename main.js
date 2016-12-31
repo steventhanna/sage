@@ -10,6 +10,7 @@ const ejs = require('ejs');
 const storage = require('electron-json-storage');
 const async = require('async');
 var Tesseract = require('tesseract.js');
+var Fuse = require('fuse.js');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -134,6 +135,21 @@ getSetting('settings', function(settings) {
 
 var images = [];
 
+ipc.on('searchChange', function(event, data) {
+  if (data === "") {
+    updateImageSearchGrid(images);
+  } else {
+    var options = {
+      keys: ["content"]
+    };
+    var fuse = new Fuse(images, options);
+    console.log(JSON.stringify(images));
+    var temp = fuse.search(data);
+    console.log(temp);
+    updateImageSearchGrid(temp);
+  }
+});
+
 ipc.on('dragDropFile', function(event, data) {
   // Analyze the images, then concat the data
   // error('success', "<strong>Analyzing...</strong> This might take some time, the page will update when ready.");
@@ -172,9 +188,30 @@ ipc.on('renderImage', function() {
   updateImageGrid();
 });
 
+function updateImageSearchGrid(img) {
+  var values = {
+    images: img,
+    search: true
+  };
+  var data = ejs.renderFile('components/imageGrid.ejs', values, function(err, str) {
+    if (err || str == undefined) {
+      console.log("There was an error rendering the EJS file.");
+      console.log("Error = " + err);
+      error('danger', "<strong>Uh-Oh!</strong> There was an error rendering the component.");
+    } else {
+      if (loadingModal != undefined) {
+        sendNotification("Sage", "Image Analaysis Complete");
+        loadingModal.close();
+      }
+      win.webContents.send('imageData', str);
+    }
+  });
+}
+
 function updateImageGrid() {
   var values = {
-    images: images
+    images: images,
+    search: false
   };
   var data = ejs.renderFile('components/imageGrid.ejs', values, function(err, str) {
     if (err || str == undefined) {

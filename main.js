@@ -1,3 +1,10 @@
+/**
+ * Sage
+ * A stand-alone application to search through images by the text that hey contain
+ * using Electron.
+ * @author Steven T Hanna :: github.com/steventhanna
+ */
+
 const {
   app,
   BrowserWindow
@@ -266,6 +273,3 @@ app.on('activate', () => {
     createWindow()
   }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.

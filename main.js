@@ -42,7 +42,7 @@ function createWindow() {
   }))
   updateImageGrid();
   // Open the DevTools.
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 
   win.once('ready-to-show', () => {
     updateImageGrid();

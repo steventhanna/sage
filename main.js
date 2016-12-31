@@ -54,7 +54,7 @@ function createLoadingModal() {
     parent: win,
     modal: true,
     width: 600,
-    height: 300
+    height: 400
   });
 
   loadingModal.loadURL(url.format({
@@ -136,8 +136,8 @@ var images = [];
 
 ipc.on('dragDropFile', function(event, data) {
   // Analyze the images, then concat the data
-  error('success', "<strong>Analyzing...</strong> This might take some time, the page will update when ready.");
-  console.log("DRAG");
+  // error('success', "<strong>Analyzing...</strong> This might take some time, the page will update when ready.");
+  // console.log("DRAG");
   var counter = 0;
   createLoadingModal();
   async.map(data, function(image) {

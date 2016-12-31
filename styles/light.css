@@ -4,21 +4,21 @@
 }
 
 .navbar-default: {
-  border-bottom-color: #00B16A;
+  border-bottom-color: #263F07;
 }
 
 .navbar-default .navbar-nav > li > a {
-  color: #00B16A;
+  color: #263F07;
 }
 
 .btn-green-outline {
-  color: #00B16A;
+  color: #263F07;
   background-color: transparent !important;
-  border-color: #00B16A;
+  border-color: #263F07;
 }
 
 .btn-green-outline:hover {
   color: #fff;
-  background-color: #00B16A !important;
-  border-color: #00B16A;
+  background-color: #263F07 !important;
+  border-color: #263F07;
 }

@@ -30,7 +30,8 @@ function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    titleBarStyle: 'hidden'
+    titleBarStyle: 'hidden',
+    icon: 'sage.png'
   });
 
   // and load the index.html of the app.

@@ -150,9 +150,7 @@ ipc.on('searchChange', function(event, data) {
       keys: ["content"]
     };
     var fuse = new Fuse(images, options);
-    console.log(JSON.stringify(images));
     var temp = fuse.search(data);
-    console.log(temp);
     updateImageSearchGrid(temp);
   }
 });
@@ -165,9 +163,8 @@ ipc.on('dragDropFile', function(event, data) {
   createLoadingModal();
   async.map(data, function(image) {
     Tesseract.recognize(image.path).progress(message => loadingModal.webContents.send('loadingUpdate', [message, counter + 1])).then(function(result) {
-      console.log(result.text);
       // Build the string from the array
-      image.content = result.text;
+      image.content = result.text.replace(/(\r\n|\n|\r)/gm, "");
       counter++;
       if (counter == data.length) {
         images = images.concat(data);

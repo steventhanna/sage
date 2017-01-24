@@ -1,4 +1,6 @@
 # Sage
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/steventhanna/sage.svg)](https://greenkeeper.io/)
 Search through images with lots of text by using Tesseract to perform character recognition.
 
 ## Purpose
